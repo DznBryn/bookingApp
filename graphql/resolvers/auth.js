@@ -1,5 +1,7 @@
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../../models/User');
+const { Token } = require('graphql');
 
 module.exports = {
 	createUser: async ({ userInput: { email, password } }) => {
@@ -22,5 +24,28 @@ module.exports = {
 			console.log(error);
 			throw error;
 		}
+	},
+	login: async ({ email, password }) => {
+		const user = await User.findOne({ email });
+
+		if (!user) {
+			throw new Error('Invalid Creditials');
+		}
+
+		const isMatched = await bcrypt.compare(password, user.password);
+
+		if (!isMatched) {
+			throw new Error('Invalid Creditials');
+		}
+
+		const token = jwt.sign({ userId: user.id }, process.env.jwtSecret, {
+			expiresIn: '1h',
+		});
+
+		return {
+			userId: user.id,
+			token,
+			tokenExpiration: 1,
+		};
 	},
 };

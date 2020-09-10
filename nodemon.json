@@ -2,7 +2,8 @@
     "env":{
         "MONGO_USER": "brian",
         "MONGO_PASSWORD": "2UymyfBFVMrj8KkD",
-        "MONGO_DB": "Project1"
+        "MONGO_DB": "Project1",
+        "jwtSecret": "awbdjhawhbdguyegcshcq8923u89ur892hd4289ur389udj984"
 
     }
 }

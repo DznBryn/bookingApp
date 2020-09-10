@@ -15,11 +15,15 @@ module.exports = {
 			throw error;
 		}
 	},
-	createEvent: async ({
-		createEventInput: { title, description, price, date },
-	}) => {
+	createEvent: async (
+		{ createEventInput: { title, description, price, date } },
+		req
+	) => {
+		if (!req.isAuth) {
+			throw new Error('User not Authorize');
+		}
 		try {
-			const creator = await User.findById('5f42abe464f642db06f30453');
+			const creator = await User.findById(req.userId);
 
 			if (!creator) {
 				throw Error('user dont exist');
@@ -29,7 +33,7 @@ module.exports = {
 				description,
 				price: +price,
 				date: dateToString(date),
-				creator: '5f42abe464f642db06f30453',
+				creator: req.userId,
 			});
 			await event.save();
 
